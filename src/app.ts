@@ -8,7 +8,12 @@ import Fastify, { FastifyReply, FastifyRequest } from "fastify"
 
 // import swagger from "@fastify/swagger-ui"
 
+import { boardSchemas } from "./modules/board/board.schema"
+import { boardRoutes } from "./modules/board/board.route"
+
 // import {withRefResolver} from "fastify-zod";
+
+import cors from "@fastify/cors"
 
 export const server = Fastify({ logger: true })
 
@@ -17,18 +22,24 @@ server.get("/healthcheck", (req, res) => {
 })
 
 async function main() {
-  // for (const schema of [...userSchemas, ...productSchemas]) {
-  //     server.addSchema(schema);
-  // }
+  for (const schema of [...boardSchemas]) {
+    server.addSchema(schema)
+  }
+
+  await server.register(cors, {
+    origin: "http://localhost:3000", 
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+    credentials: true, 
+  })
 
   server.register(import("@fastify/swagger"))
   server.register(import("@fastify/swagger-ui"), {
     routePrefix: "/docs",
   })
 
-  // server.register(userRoutes, {
-  //     prefix: "api/users"
-  // });
+  server.register(boardRoutes, {
+    prefix: "api/boards",
+  })
 
   // server.register(productRoutes, {
   //     prefix: "api/products"
@@ -36,7 +47,7 @@ async function main() {
 
   server.get("/", (req, res) => {
     console.log(req.params)
-    res.send("Hello World!")
+    res.send({ data: "lolo" })
   })
 
   server.listen(
