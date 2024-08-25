@@ -1,5 +1,9 @@
 import { FastifyInstance } from "fastify"
-import { createBoardHandler, getAllBoardsHandler } from "./board.controller"
+import {
+  createBoardHandler,
+  deleteBoardHandler,
+  getAllBoardsHandler,
+} from "./board.controller"
 import { $ref } from "./board.schema"
 
 export async function boardRoutes(server: FastifyInstance) {
@@ -16,24 +20,28 @@ export async function boardRoutes(server: FastifyInstance) {
     createBoardHandler
   )
 
-  //   server.post(
-  //     "/login",
-  //     {
-  //       schema: {
-  //         body: $ref("loginSchema"),
-  //         response: {
-  //           201: $ref("loginResponseSchema"),
-  //         },
-  //       },
-  //     },
-  //     loginHandler
-  //   )
+  server.delete(
+    "/:id",
+    {
+      schema: {
+        response: {
+          200: $ref("deleteBoardResponse"),
+        },
+      },
+    },
+    deleteBoardHandler
+  )
+
 
   server.get(
     "/all",
-    // {
-    //   preHandler: [server.authenticate],
-    // },
+    {
+      schema: {
+        response: {
+          200: $ref("boardsResponseSchema"),
+        },
+      },
+    },
     getAllBoardsHandler
   )
 }

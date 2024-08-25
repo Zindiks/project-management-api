@@ -5,13 +5,12 @@ import Fastify, { FastifyReply, FastifyRequest } from "fastify"
 // import {productSchemas} from "./modules/product/product.schema";
 // import {productRoutes} from "./modules/product/product.route";
 // import { version } from "../package.json"
-
 // import swagger from "@fastify/swagger-ui"
+// import {withRefResolver} from "fastify-zod";
 
 import { boardSchemas } from "./modules/board/board.schema"
 import { boardRoutes } from "./modules/board/board.route"
 
-// import {withRefResolver} from "fastify-zod";
 
 import cors from "@fastify/cors"
 
@@ -47,7 +46,7 @@ async function main() {
 
   server.get("/", (req, res) => {
     console.log(req.params)
-    res.send({ data: "lolo" })
+    res.send({ data: "it works" })
   })
 
   server.listen(

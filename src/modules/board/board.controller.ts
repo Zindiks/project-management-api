@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { createBoard, getAllBoards } from "./board.service"
-import { CreatBoardInput } from "./board.schema"
+import { createBoard, deleteBoard, getAllBoards } from "./board.service"
+import { CreatBoardInput, DeleteBoardInput } from "./board.schema"
 
 export async function createBoardHandler(
   request: FastifyRequest<{
@@ -14,6 +14,29 @@ export async function createBoardHandler(
     return reply.status(201).send(board)
   } catch (err) {
     console.log(err)
+    return reply.status(500).send(err)
+  }
+}
+
+export async function deleteBoardHandler(
+  request: FastifyRequest<{
+    Params: { id: string }
+  }>,
+  reply: FastifyReply
+) {
+  const { id } = request.params
+
+  try {
+    const deleted = await deleteBoard(id)
+
+    console.log(deleted)
+
+    if (deleted) {
+      return reply.status(200).send(deleted)
+    } else {
+      return reply.status(404).send({ message: "id not found" })
+    }
+  } catch (err) {
     return reply.status(500).send(err)
   }
 }
@@ -55,6 +78,11 @@ export async function createBoardHandler(
 //   //respond
 // }
 
-export async function getAllBoardsHandler() {
-  return getAllBoards
+export async function getAllBoardsHandler(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  const boards = await getAllBoards()
+
+  return reply.status(200).send(boards)
 }
