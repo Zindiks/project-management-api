@@ -9,11 +9,12 @@ export async function createBoardHandler(
   reply: FastifyReply
 ) {
   const body = request.body
+  console.log(body)
+
   try {
     const board = await createBoard(body)
     return reply.status(201).send(board)
   } catch (err) {
-    console.log(err)
     return reply.status(500).send(err)
   }
 }

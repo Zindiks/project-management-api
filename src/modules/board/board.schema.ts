@@ -5,15 +5,34 @@ const boardId = {
   id: z.string(),
 }
 
+const boardRest = {
+  title: z
+    .string({
+      required_error: "title is required",
+    })
+    .min(3, "Title must be at least 3 characters")
+    .max(36, "Title must be at most 36 characters"),
+  orgId: z.string(),
+  imageId: z.string(),
+  imageThumbUrl: z.string(),
+  imageFullUrl: z.string(),
+  imageLinkHTML: z.string(),
+  imageUserName: z.string(),
+}
+
+const boardTimestamp = {
+  createdAt: z.date(),
+  updatedAt: z.date(),
+}
+
 const createBoard = z.object({
-  title: z.string({
-    required_error: "title is required",
-  }),
+  ...boardRest,
 })
 
 const createBoardResponseSchema = z.object({
   ...boardId,
-  title: z.string(),
+  ...boardRest,
+  ...boardTimestamp,
 })
 
 const deleteBoard = z.object({
