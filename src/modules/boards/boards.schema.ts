@@ -5,19 +5,24 @@ const boardId = {
   id: z.string(),
 }
 
-const boardRest = {
-  title: z
+const boardTitle = {
+    title: z
     .string({
       required_error: "title is required",
     })
     .min(3, "Title must be at least 3 characters")
     .max(36, "Title must be at most 36 characters"),
+}
+
+const boardRest = {
+  ...boardTitle,
   orgId: z.string(),
   imageId: z.string(),
   imageThumbUrl: z.string(),
   imageFullUrl: z.string(),
   imageLinkHTML: z.string(),
   imageUserName: z.string(),
+
 }
 
 const boardTimestamp = {
@@ -25,11 +30,17 @@ const boardTimestamp = {
   updatedAt: z.date(),
 }
 
+//
 const createBoard = z.object({
   ...boardRest,
 })
 
-const createBoardResponseSchema = z.object({
+const updateBoardTitle = z.object({
+  ...boardId,
+  ...boardTitle,
+})
+
+const fullBoardResponseSchema = z.object({
   ...boardId,
   ...boardRest,
   ...boardTimestamp,
@@ -44,37 +55,18 @@ const deleteBoardResponse = z.object({
   title: z.string(),
 })
 
-// const createUserSchema = z.object({
-//   ...userCore,
-//   password: z.string({
-//     required_error: "Password is required",
-//     invalid_type_error: "Password must be a string",
-//   }),
-// })
 
-// const loginSchema = z.object({
-//   email: z
-//     .string({
-//       required_error: "Email is required",
-//       invalid_type_error: "Email must be a string",
-//     })
-//     .email(),
-//   password: z.string({}),
-// })
 
-// const loginResponseSchema = z.object({
-//   access_token: z.string(),
-// })
-
-const boardsResponseSchema = z.array(createBoardResponseSchema)
+const boardsResponseSchema = z.array(fullBoardResponseSchema)
 
 export type CreatBoardInput = z.infer<typeof createBoard>
+export type UpdateBoardTitleInput = z.infer<typeof updateBoardTitle>
 export type DeleteBoardInput = z.infer<typeof deleteBoard>
-// export type LoginInput = z.infer<typeof loginSchema>
 export const { schemas: boardSchemas, $ref } = buildJsonSchemas({
   createBoard,
-  createBoardResponseSchema,
+  fullBoardResponseSchema,
   boardsResponseSchema,
   deleteBoard,
   deleteBoardResponse,
+  updateBoardTitle
 })

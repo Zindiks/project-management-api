@@ -8,9 +8,8 @@ import Fastify, { FastifyReply, FastifyRequest } from "fastify"
 // import swagger from "@fastify/swagger-ui"
 // import {withRefResolver} from "fastify-zod";
 
-import { boardSchemas } from "./modules/board/board.schema"
-import { boardRoutes } from "./modules/board/board.route"
-
+import { boardSchemas } from "./modules/boards/boards.schema"
+import { boardRoutes } from "./modules/boards/boards.route"
 
 import cors from "@fastify/cors"
 
@@ -26,9 +25,9 @@ async function main() {
   }
 
   await server.register(cors, {
-    origin: "http://localhost:3000", 
-    methods: ["GET", "POST", "PUT", "DELETE"], 
-    credentials: true, 
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
+    credentials: true,
   })
 
   server.register(import("@fastify/swagger"))

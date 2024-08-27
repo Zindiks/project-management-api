@@ -3,23 +3,27 @@ import {
   createBoardHandler,
   deleteBoardHandler,
   getAllBoardsHandler,
-} from "./board.controller"
-import { $ref } from "./board.schema"
+  getBoardByIdHandler,
+  updateBoardTitleHandler,
+} from "./boards.controller"
+import { $ref } from "./boards.schema"
 
 export async function boardRoutes(server: FastifyInstance) {
+  //POST:
   server.post(
     "/create",
     {
       schema: {
         body: $ref("createBoard"),
         response: {
-          201: $ref("createBoardResponseSchema"),
+          201: $ref("fullBoardResponseSchema"),
         },
       },
     },
     createBoardHandler
   )
 
+  //DELETE:
   server.delete(
     "/:id",
     {
@@ -32,9 +36,22 @@ export async function boardRoutes(server: FastifyInstance) {
     deleteBoardHandler
   )
 
+  //GET:
 
   server.get(
-    "/all",
+    "/:boardId",
+    {
+      schema: {
+        response: {
+          200: $ref("fullBoardResponseSchema"),
+        },
+      },
+    },
+    getBoardByIdHandler
+  )
+
+  server.get(
+    "/all/:orgId",
     {
       schema: {
         response: {
@@ -43,5 +60,20 @@ export async function boardRoutes(server: FastifyInstance) {
       },
     },
     getAllBoardsHandler
+  )
+
+  //UPDATE:
+
+  server.patch(
+    "/update",
+    {
+      schema: {
+        body: $ref("updateBoardTitle"),
+        response: {
+          201: $ref("fullBoardResponseSchema"),
+        },
+      },
+    },
+    updateBoardTitleHandler
   )
 }
