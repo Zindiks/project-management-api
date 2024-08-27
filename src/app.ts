@@ -1,4 +1,4 @@
-import Fastify, { FastifyReply, FastifyRequest } from "fastify"
+import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 // import fastifyJwt from "fastify-jwt";
 // import {userRoutes} from "./modules/user/user.route";
 // import {userSchemas} from "./modules/user/user.schema";
@@ -8,45 +8,45 @@ import Fastify, { FastifyReply, FastifyRequest } from "fastify"
 // import swagger from "@fastify/swagger-ui"
 // import {withRefResolver} from "fastify-zod";
 
-import { boardSchemas } from "./modules/boards/boards.schema"
-import { boardRoutes } from "./modules/boards/boards.route"
+import { boardSchemas } from "./modules/boards/boards.schema";
+import { boardRoutes } from "./modules/boards/boards.route";
 
-import cors from "@fastify/cors"
+import cors from "@fastify/cors";
 
-export const server = Fastify({ logger: true })
+export const server = Fastify({ logger: true });
 
 server.get("/healthcheck", (req, res) => {
-  return res.status(200).send("Ok!")
-})
+  return res.status(200).send("Ok!");
+});
 
 async function main() {
   for (const schema of [...boardSchemas]) {
-    server.addSchema(schema)
+    server.addSchema(schema);
   }
 
   await server.register(cors, {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
-  })
+  });
 
-  server.register(import("@fastify/swagger"))
+  server.register(import("@fastify/swagger"));
   server.register(import("@fastify/swagger-ui"), {
     routePrefix: "/docs",
-  })
+  });
 
   server.register(boardRoutes, {
     prefix: "api/boards",
-  })
+  });
 
   // server.register(productRoutes, {
   //     prefix: "api/products"
   // })
 
   server.get("/", (req, res) => {
-    console.log(req.params)
-    res.send({ data: "it works" })
-  })
+    console.log(req.params);
+    res.send({ data: "it works" });
+  });
 
   server.listen(
     {
@@ -55,12 +55,12 @@ async function main() {
     },
     (err, address) => {
       if (err) {
-        server.log.error(err)
-        process.exit(1)
+        server.log.error(err);
+        process.exit(1);
       }
-      server.log.info(`Server listening at ${address}`)
-    }
-  )
+      server.log.info(`Server listening at ${address}`);
+    },
+  );
 }
 
-main()
+main();

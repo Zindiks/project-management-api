@@ -1,8 +1,16 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { createBoard, deleteBoard, getBoardsByOrgId,getBoardById, updateBoardTitle } from "./boards.service"
-import { CreatBoardInput, DeleteBoardInput, UpdateBoardTitleInput } from "./boards.schema"
-
-
+import {
+  createBoard,
+  deleteBoard,
+  getBoardsByOrgId,
+  getBoardById,
+  updateBoardTitle,
+} from "./boards.service"
+import {
+  CreatBoardInput,
+  DeleteBoardInput,
+  UpdateBoardTitleInput,
+} from "./boards.schema"
 
 // CREATE BOARD
 export async function createBoardHandler(
@@ -22,7 +30,6 @@ export async function createBoardHandler(
   }
 }
 
-
 // UPDATE BOARD TITLE
 export async function updateBoardTitleHandler(
   request: FastifyRequest<{
@@ -41,8 +48,6 @@ export async function updateBoardTitleHandler(
     return reply.status(500).send(err)
   }
 }
-
-
 
 // DELETE BOARD BY ID
 export async function deleteBoardHandler(
@@ -66,16 +71,13 @@ export async function deleteBoardHandler(
   }
 }
 
-
-// GET BOARD BY ID 
+// GET BOARD BY ID
 export async function getBoardByIdHandler(
   request: FastifyRequest<{
     Params: { boardId: string }
   }>,
   reply: FastifyReply
 ) {
-
-
   const { boardId } = request.params
 
   try {
@@ -89,7 +91,6 @@ export async function getBoardByIdHandler(
     return reply.status(500).send(err)
   }
 }
-
 
 // GET ALL BOARDS BY ORGANIZATION ID
 export async function getAllBoardsHandler(
