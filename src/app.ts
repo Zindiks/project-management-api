@@ -7,7 +7,7 @@
 // import swagger from "@fastify/swagger-ui"
 // import {withRefResolver} from "fastify-zod";
 
-import Fastify, { FastifyReply, FastifyRequest } from "fastify";
+import Fastify from "fastify";
 import { boardSchemas } from "./modules/boards/boards.schema";
 import { listSchemas } from "./modules/lists/lists.schema";
 import { boardRoutes } from "./modules/boards/boards.route";
@@ -17,8 +17,29 @@ import { listRoutes } from "./modules/lists/lists.route";
 
 export const server = Fastify({ logger: true });
 
-server.get("/healthcheck", (req, res) => {
-  return res.status(200).send("Ok!");
+server.register(import("@fastify/swagger"), {
+  swagger: {
+    info: {
+      title: "API Documentation",
+      description: "API для управления досками и списками",
+      version: "1.0.0",
+    },
+    host: "localhost:4000",
+    schemes: ["http"],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+  },
+});
+server.register(import("@fastify/swagger-ui"), {
+  routePrefix: "/docs",
+});
+
+server.register(boardRoutes, {
+  prefix: "api/boards",
+});
+
+server.register(listRoutes, {
+  prefix: "api/lists",
 });
 
 async function main() {
@@ -30,31 +51,6 @@ async function main() {
     origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
-  });
-
-  server.register(import("@fastify/swagger"), {
-    swagger: {
-      info: {
-        title: "API Documentation",
-        description: "API для управления досками и списками",
-        version: "1.0.0",
-      },
-      host: "localhost:4000",
-      schemes: ["http"],
-      consumes: ["application/json"],
-      produces: ["application/json"],
-    },
-  });
-  server.register(import("@fastify/swagger-ui"), {
-    routePrefix: "/docs",
-  });
-
-  server.register(boardRoutes, {
-    prefix: "api/boards",
-  });
-
-  server.register(listRoutes, {
-    prefix: "api/lists",
   });
 
   server.listen(

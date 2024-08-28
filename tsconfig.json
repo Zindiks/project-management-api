@@ -1,13 +1,30 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES2017", 
+//     "lib": ["ES2017", "DOM"],
+//     "module": "commonjs",
+//     "outDir": "./dist",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true
+//   },
+//   "include": ["src/**/*"],
+//   "exclude": ["node_modules"]
+// }
+
+
 {
   "compilerOptions": {
-    "target": "ES2017", 
-    "lib": ["ES2017", "DOM"],
+    "outDir": "./dist", // Убедитесь, что это папка для сборки
+    "rootDir": "./src", // Корневая папка исходных файлов
     "module": "commonjs",
-    "outDir": "./dist",
+    "target": "es2018",
+    "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"], // Включение всех TypeScript файлов в папке src
   "exclude": ["node_modules"]
 }

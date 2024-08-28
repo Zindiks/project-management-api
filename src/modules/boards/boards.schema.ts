@@ -4,8 +4,7 @@ import { buildJsonSchemas } from "fastify-zod";
 
 
 
-// //Temporary solution
-
+//Temporary solution
 
 // const cardSchema = z.object({
 //   id: z.string(),
