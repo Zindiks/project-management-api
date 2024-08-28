@@ -9,9 +9,11 @@ import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 // import {withRefResolver} from "fastify-zod";
 
 import { boardSchemas } from "./modules/boards/boards.schema";
+import { listSchemas } from "./modules/lists/lists.schema";
 import { boardRoutes } from "./modules/boards/boards.route";
 
 import cors from "@fastify/cors";
+import { listRoutes } from "./modules/lists/lists.route";
 
 export const server = Fastify({ logger: true });
 
@@ -20,7 +22,7 @@ server.get("/healthcheck", (req, res) => {
 });
 
 async function main() {
-  for (const schema of [...boardSchemas]) {
+  for (const schema of [...boardSchemas,...listSchemas]) {
     server.addSchema(schema);
   }
 
@@ -39,14 +41,10 @@ async function main() {
     prefix: "api/boards",
   });
 
-  // server.register(productRoutes, {
-  //     prefix: "api/products"
-  // })
-
-  server.get("/", (req, res) => {
-    console.log(req.params);
-    res.send({ data: "it works" });
+  server.register(listRoutes, {
+    prefix: "api/lists",
   });
+
 
   server.listen(
     {

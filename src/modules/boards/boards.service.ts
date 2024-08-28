@@ -29,11 +29,22 @@ export async function updateBoardTitle(input: UpdateBoardTitleInput) {
 // GET BOARD BY ID
 //TODO: add <orgId> for better security
 export async function getBoardById(boardId: string) {
-  return prisma.board.findUnique({
+  const data = await prisma.board.findUnique({
     where: {
       id: boardId,
     },
+    include: {
+      lists: {
+        include: {
+          cards: true,
+        },
+      },
+    },
   });
+
+  console.log(data);
+
+  return data;
 }
 
 // DELETE BOARD BY ID

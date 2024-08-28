@@ -1,6 +1,36 @@
 import { z } from "zod";
 import { buildJsonSchemas } from "fastify-zod";
 
+
+
+
+//Temporary solution
+
+
+const cardSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  order: z.number(),
+  description: z.string().nullable(), 
+  listId: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+const listSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  order: z.number(),
+  boardId: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  cards: z.array(cardSchema), // relations with cards
+});
+
+
+////
+
+
 const boardId = {
   id: z.string(),
 };
