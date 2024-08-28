@@ -15,6 +15,7 @@ export async function listRoutes(server: FastifyInstance) {
         response: {
           201: $ref("fullListResponseSchema"),
         },
+        tags: ["List"],
       },
     },
     createListHandler,
@@ -28,6 +29,7 @@ export async function listRoutes(server: FastifyInstance) {
         response: {
           200: $ref("fullListsResponseSchema"),
         },
+        tags: ["Lists"],
       },
     },
     getListsByBoardIdHandler,

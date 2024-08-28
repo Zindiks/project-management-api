@@ -1,12 +1,12 @@
-import { FastifyInstance } from "fastify"
+import { FastifyInstance } from "fastify";
 import {
   createBoardHandler,
   deleteBoardHandler,
   getAllBoardsHandler,
   getBoardByIdHandler,
   updateBoardTitleHandler,
-} from "./boards.controller"
-import { $ref } from "./boards.schema"
+} from "./boards.controller";
+import { $ref } from "./boards.schema";
 
 export async function boardRoutes(server: FastifyInstance) {
   //POST:
@@ -18,10 +18,12 @@ export async function boardRoutes(server: FastifyInstance) {
         response: {
           201: $ref("fullBoardResponseSchema"),
         },
+        description: "Create a Board",
+        tags: ["Boards"],
       },
     },
-    createBoardHandler
-  )
+    createBoardHandler,
+  );
 
   //DELETE:
   server.delete(
@@ -31,10 +33,12 @@ export async function boardRoutes(server: FastifyInstance) {
         response: {
           200: $ref("deleteBoardResponse"),
         },
+        description: "Delete a Board by id",
+        tags: ["Boards"],
       },
     },
-    deleteBoardHandler
-  )
+    deleteBoardHandler,
+  );
 
   //GET:
 
@@ -45,10 +49,12 @@ export async function boardRoutes(server: FastifyInstance) {
         response: {
           200: $ref("fullBoardResponseSchema"),
         },
+        description: "",
+        tags: ["Boards"],
       },
     },
-    getBoardByIdHandler
-  )
+    getBoardByIdHandler,
+  );
 
   server.get(
     "/all/:orgId",
@@ -57,10 +63,11 @@ export async function boardRoutes(server: FastifyInstance) {
         response: {
           200: $ref("boardsResponseSchema"),
         },
+        tags: ["Boards"],
       },
     },
-    getAllBoardsHandler
-  )
+    getAllBoardsHandler,
+  );
 
   //UPDATE:
 
@@ -72,8 +79,10 @@ export async function boardRoutes(server: FastifyInstance) {
         response: {
           201: $ref("fullBoardResponseSchema"),
         },
+        description: "change board title",
+        tags: ["Boards"],
       },
     },
-    updateBoardTitleHandler
-  )
+    updateBoardTitleHandler,
+  );
 }
