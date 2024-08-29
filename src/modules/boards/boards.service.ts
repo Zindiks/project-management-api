@@ -18,10 +18,10 @@ export async function updateBoardTitle(input: UpdateBoardTitleInput) {
 
   return prisma.board.update({
     where: {
-      id: id, // Условие поиска по id
+      id: id,
     },
     data: {
-      title: title, // Новое значение для поля title
+      title: title,
     },
   });
 }
