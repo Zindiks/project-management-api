@@ -2,30 +2,6 @@ import { z } from "zod";
 import { buildJsonSchemas } from "fastify-zod";
 
 
-
-
-//Temporary solution
-
-// const cardSchema = z.object({
-//   id: z.string(),
-//   title: z.string(),
-//   order: z.number(),
-//   description: z.string().nullable(), 
-//   listId: z.string(),
-//   createdAt: z.date(),
-//   updatedAt: z.date(),
-// });
-
-// const listSchema = z.object({
-//   id: z.string(),
-//   title: z.string(),
-//   order: z.number(),
-//   boardId: z.string(),
-//   createdAt: z.date(),
-//   updatedAt: z.date(),
-//   cards: z.array(cardSchema), // relations with cards
-// });
-
 const boardId = {
   id: z.string(),
 };
@@ -41,17 +17,17 @@ const boardTitle = {
 
 const boardRest = {
   ...boardTitle,
-  orgId: z.string(),
-  imageId: z.string(),
-  imageThumbUrl: z.string(),
-  imageFullUrl: z.string(),
-  imageLinkHTML: z.string(),
-  imageUserName: z.string(),
+  org_id: z.string(),
+  image_id: z.string(),
+  image_thumb_url: z.string(),
+  image_full_url: z.string(),
+  image_link_html: z.string(),
+  image_username: z.string(),
 };
 
 const boardTimestamp = {
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  created_at: z.date(),
+  updated_at: z.date(),
 };
 
 //

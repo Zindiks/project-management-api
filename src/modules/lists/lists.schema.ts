@@ -2,7 +2,7 @@ import { z } from "zod";
 import { buildJsonSchemas } from "fastify-zod";
 
 const boardId = {
-  boardId: z.string(),
+  board_id: z.string(),
 };
 
 const listId = {
@@ -29,8 +29,8 @@ const listTitle = {
 // };
 
 const listTimestamp = {
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  created_at: z.date(),
+  updated_at: z.date(),
 };
 
 //

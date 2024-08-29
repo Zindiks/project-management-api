@@ -1,4 +1,5 @@
-import prisma from "../../utils/prisma";
+import { Knex } from "knex";
+
 import {
   CreatBoardInput,
   DeleteBoardInput,
@@ -6,64 +7,59 @@ import {
 } from "./boards.schema";
 
 // CREATE BOARD
-export async function createBoard(input: CreatBoardInput) {
-  return prisma.board.create({
-    data: input,
-  });
+export async function createBoard(knex: Knex, input: CreatBoardInput) {
+  const [newBoard] = await knex("boards").insert(input).returning("*");
+  return newBoard;
 }
 
 // UPDATE BOARD TITLE
-export async function updateBoardTitle(input: UpdateBoardTitleInput) {
+export async function updateBoardTitle(
+  knex: Knex,
+  input: UpdateBoardTitleInput,
+) {
   const { id, title } = input;
 
-  return prisma.board.update({
-    where: {
-      id: id,
-    },
-    data: {
-      title: title,
-    },
-  });
+  const [updatedBoard] = await knex("boards")
+    .where({ id })
+    .update({ title })
+    .returning("*");
+  return updatedBoard;
 }
 
 // GET BOARD BY ID
-//TODO: add <orgId> for better security
-export async function getBoardById(boardId: string) {
-  const data = await prisma.board.findUnique({
-    where: {
-      id: boardId,
-    },
-    include: {
-      lists: {
-        include: {
-          cards: true,
-        },
-      },
-    },
-  });
+export async function getBoardById(knex: Knex, board_id: string) {
+  // Instead of JOIN tables I will try this approach. 3 fetches instead one big massive fetch... Actually, at current state it doesnt't realy matter
 
-  console.log(data);
+  const board = await knex("boards").where({ id: board_id }).first();
 
-  return data;
+  // I will test this approach later
+  // .leftJoin("lists", "boards.id", "lists.board_id").leftJoin("cards", "lists.id", "cards.lists_id");
+
+  // if (board) {
+  //   const lists = await knex("lists").where({ board_id }).select("*");
+
+  //   for (const list of lists) {
+  //     list.cards = await knex("cards").where({ list_id: list.id }).select("*");
+  //   }
+
+  //   board.lists = lists;
+  // }
+  return board;
 }
 
 // DELETE BOARD BY ID
-export async function deleteBoard(id: string) {
-  return prisma.board.delete({
-    where: {
-      id,
-    },
-  });
+export async function deleteBoard(knex: Knex, input: DeleteBoardInput) {
+  const [deletedBoard] = await knex("boards")
+    .where(input)
+    .del()
+    .returning("id");
+  return deletedBoard;
 }
 
 // GET BOARDS (plural) BY ORGANIZATION ID
-export async function getBoardsByOrgId(orgId: string) {
-  return prisma.board.findMany({
-    where: {
-      orgId: orgId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+export async function getBoardsByOrgId(knex: Knex, org_id: string) {
+  return knex("boards")
+    .where({ org_id })
+    .orderBy("created_at", "desc")
+    .select("*");
 }

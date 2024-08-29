@@ -1,83 +1,26 @@
-import prisma from "../../utils/prisma";
+import { Knex } from "knex";
+
 import { CreateListInput } from "./lists.schema";
 
+const table = "lists";
+
 // CREATE BOARD
-export async function createList(input: CreateListInput) {
-  const { boardId, title } = input;
+export async function createList(knex: Knex, input: CreateListInput) {
+  const { board_id, title } = input;
 
-  try {
-    return await prisma.$transaction(async (prisma) => {
-      const lastList = await prisma.list.findFirst({
-        where: { boardId },
-        orderBy: { order: "desc" },
-        select: { order: true },
-      });
+  const lastList = await knex(table)
+    .where({ board_id })
+    .orderBy("order", "desc")
+    .select("order")
+    .first();
 
-      const newOrder = lastList ? lastList.order + 1 : 1;
+  const order = lastList ? lastList.order + 1 : 1;
 
-      return prisma.list.create({
-        data: {
-          title,
-          boardId,
-          order: newOrder,
-        },
-      });
-    });
-  } catch (error) {
-    console.error("Error :", error);
-    throw new Error("Something wrong...");
-  }
+  return knex(table).insert({ title, board_id, order });
 }
 
-export async function getListsByBoardId(boardId: string) {
-  console.log(boardId);
-
-  const data = await prisma.list.findMany({
-    where: {
-      boardId,
-    },
-    orderBy: {
-      order: "asc",
-    },
-  });
-
-  console.log(data);
-  return data;
+export async function getListsByBoardId(knex: Knex, board_id: string) {
+  return knex(table).where({ board_id }).orderBy("order", "asc");
 }
 
-// // UPDATE BOARD TITLE
-// export async function updateBoardTitle(input: UpdateBoardTitleInput) {
-//   const { id, title } = input;
 
-//   return prisma.board.update({
-//     where: {
-//       id: id, // Условие поиска по id
-//     },
-//     data: {
-//       title: title, // Новое значение для поля title
-//     },
-//   });
-// }
-
-// GET BOARD BY ID
-
-// // DELETE BOARD BY ID
-// export async function deleteBoard(id: string) {
-//   return prisma.board.delete({
-//     where: {
-//       id,
-//     },
-//   });
-// }
-
-// // GET BOARDS (plural) BY ORGANIZATION ID
-// export async function getBoardsByOrgId(orgId: string) {
-//   return prisma.board.findMany({
-//     where: {
-//       orgId: orgId,
-//     },
-//     orderBy: {
-//       createdAt: "desc",
-//     },
-//   });
-// }

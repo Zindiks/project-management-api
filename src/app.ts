@@ -8,14 +8,21 @@
 // import {withRefResolver} from "fastify-zod";
 
 import Fastify from "fastify";
+
+import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+
 import { boardSchemas } from "./modules/boards/boards.schema";
 import { listSchemas } from "./modules/lists/lists.schema";
 import { boardRoutes } from "./modules/boards/boards.route";
-
 import cors from "@fastify/cors";
 import { listRoutes } from "./modules/lists/lists.route";
+import knexPlugin from "./db/knexPlugin";
 
-export const server = Fastify({ logger: true });
+export const server = Fastify({
+  logger: true,
+}).withTypeProvider<TypeBoxTypeProvider>();
+
+server.register(knexPlugin);
 
 server.register(import("@fastify/swagger"), {
   swagger: {
@@ -30,6 +37,7 @@ server.register(import("@fastify/swagger"), {
     produces: ["application/json"],
   },
 });
+
 server.register(import("@fastify/swagger-ui"), {
   routePrefix: "/docs",
 });

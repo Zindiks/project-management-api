@@ -1,9 +1,10 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { createList, getListsByBoardId } from "./lists.service";
 import { CreateListInput } from "./lists.schema";
 
 // CREATE BOARD
 export async function createListHandler(
+  this: FastifyInstance,
   request: FastifyRequest<{
     Body: CreateListInput;
   }>,
@@ -13,7 +14,7 @@ export async function createListHandler(
   console.log(body);
 
   try {
-    const board = await createList(body);
+    const board = await createList(this.knex, body);
     return reply.status(201).send(board);
   } catch (err) {
     return reply.status(500).send(err);
@@ -63,6 +64,7 @@ export async function createListHandler(
 
 // // GET BOARD BY ID
 export async function getListsByBoardIdHandler(
+  this: FastifyInstance,
   request: FastifyRequest<{
     Params: { boardId: string };
   }>,
@@ -70,13 +72,10 @@ export async function getListsByBoardIdHandler(
 ) {
   const { boardId } = request.params;
 
-
-
   try {
-    const board = await getListsByBoardId(boardId);
+    const board = await getListsByBoardId(this.knex, boardId);
 
     if (board) {
-
       return reply.status(200).send(board);
     } else {
       return reply.status(404).send({ message: "no lists" });
