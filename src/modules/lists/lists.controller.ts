@@ -15,7 +15,10 @@ export async function createListHandler(
 
   try {
     const board = await createList(this.knex, body);
-    return reply.status(201).send(board);
+
+
+
+    return reply.status(200).send(board);
   } catch (err) {
     return reply.status(500).send(err);
   }

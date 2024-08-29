@@ -3,6 +3,7 @@ import { Knex } from "knex";
 import {
   CreatBoardInput,
   DeleteBoardInput,
+  deleteBoardResponse,
   UpdateBoardTitleInput,
 } from "./boards.schema";
 
@@ -23,6 +24,9 @@ export async function updateBoardTitle(
     .where({ id })
     .update({ title })
     .returning("*");
+
+
+    console.log(updatedBoard)
   return updatedBoard;
 }
 
@@ -30,7 +34,10 @@ export async function updateBoardTitle(
 export async function getBoardById(knex: Knex, board_id: string) {
   // Instead of JOIN tables I will try this approach. 3 fetches instead one big massive fetch... Actually, at current state it doesnt't realy matter
 
-  const board = await knex("boards").where({ id: board_id }).first();
+  const board = await knex("boards")
+    .where({ id: board_id })
+    .select("*")
+    .first();
 
   // I will test this approach later
   // .leftJoin("lists", "boards.id", "lists.board_id").leftJoin("cards", "lists.id", "cards.lists_id");
@@ -44,16 +51,18 @@ export async function getBoardById(knex: Knex, board_id: string) {
 
   //   board.lists = lists;
   // }
+
   return board;
 }
 
 // DELETE BOARD BY ID
 export async function deleteBoard(knex: Knex, input: DeleteBoardInput) {
-  const [deletedBoard] = await knex("boards")
+  const [deleted] = await knex("boards")
     .where(input)
     .del()
-    .returning("id");
-  return deletedBoard;
+    .returning(["id", "title"]);
+    
+  return deleted;
 }
 
 // GET BOARDS (plural) BY ORGANIZATION ID

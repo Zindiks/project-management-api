@@ -50,7 +50,7 @@ const deleteBoard = z.object({
   ...boardId,
 });
 
-const deleteBoardResponse = z.object({
+export const deleteBoardResponse = z.object({
   ...boardId,
   title: z.string(),
 });

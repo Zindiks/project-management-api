@@ -12,15 +12,19 @@ export async function createList(knex: Knex, input: CreateListInput) {
     .where({ board_id })
     .orderBy("order", "desc")
     .select("order")
-    .first();
+    .first()
 
   const order = lastList ? lastList.order + 1 : 1;
 
-  return knex(table).insert({ title, board_id, order });
+  const data = await knex(table)
+    .insert({ title, board_id, order }).returning("*");
+
+   
+
+  // knex returns an array. Now the only solution is to just get first element 
+  return data[0];
 }
 
 export async function getListsByBoardId(knex: Knex, board_id: string) {
-  return knex(table).where({ board_id }).orderBy("order", "asc");
+  return knex(table).where({ board_id }).orderBy("order", "asc").returning("*");
 }
-
-
