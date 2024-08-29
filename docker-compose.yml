@@ -17,6 +17,7 @@ services:
       - app-network
     restart: unless-stopped
 
+  
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
@@ -31,20 +32,20 @@ services:
       - app-network
     restart: unless-stopped
 
-  app:
-    container_name: trello_clone_api_container
-    build: .
-    environment:
-      DATABASE_URL: "postgresql://postgres:password@postgres_container:5432/trello-clone-api?schema=public"
-    ports:
-      - "4000:4000"
-    depends_on:
-      - postgres
-    networks:
-      - app-network
-    volumes:
-      - .:/app
-    command: npm run start:prod
+  # app:
+  #   container_name: trello_clone_api_container
+  #   build: .
+  #   environment:
+  #     DATABASE_URL: "postgresql://postgres:password@postgres_container:5432/trello-clone-api?schema=public"
+  #   ports:
+  #     - "4000:4000"
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - .:/app
+  #   command: npm run start:prod
 
 networks:
   app-network:

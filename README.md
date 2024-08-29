@@ -1,6 +1,6 @@
 # trello-clone-api init
 
-##### fastify, prisma , postgresql + docker
+##### fastify, prisma (upd. now is knexjs) , postgresql + docker
 
 
 
