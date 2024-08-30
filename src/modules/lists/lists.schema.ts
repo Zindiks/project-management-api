@@ -39,10 +39,11 @@ const createList = z.object({
   ...listTitle
 });
 
-// const updateBoardTitle = z.object({
-//   ...boardId,
-//   ...boardTitle,
-// });
+const updateListTitle = z.object({
+  ...listId,
+  ...boardId,
+  ...listTitle,
+});
 
 const fullListResponseSchema = z.object({
   ...boardId,
@@ -64,11 +65,12 @@ const fullListResponseSchema = z.object({
 const fullListsResponseSchema = z.array(fullListResponseSchema);
 
 export type CreateListInput = z.infer<typeof createList>;
-// export type UpdateBoardTitleInput = z.infer<typeof updateBoardTitle>;
+export type UpdateListTitleInput = z.infer<typeof updateListTitle>;
 // export type DeleteBoardInput = z.infer<typeof deleteBoard>;
 export const { schemas: listSchemas, $ref } = buildJsonSchemas(
   {
     createList,
+    updateListTitle,
     fullListResponseSchema,
     fullListsResponseSchema,
   },

@@ -41,7 +41,6 @@ export async function updateBoardTitleHandler(
 ) {
   const body = request.body;
 
-  console.log(body);
 
   try {
     const board = await updateBoardTitle(this.knex, body);

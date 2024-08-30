@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import {
   createListHandler,
   getListsByBoardIdHandler,
+  updateListTitleHandler,
 } from "./lists.controller";
 import { $ref } from "./lists.schema";
 
@@ -64,16 +65,16 @@ export async function listRoutes(server: FastifyInstance) {
 
   // //UPDATE:
 
-  // server.patch(
-  //   "/update",
-  //   {
-  //     schema: {
-  //       body: $ref("updateBoardTitle"),
-  //       response: {
-  //         201: $ref("fullBoardResponseSchema"),
-  //       },
-  //     },
-  //   },
-  //   updateBoardTitleHandler,
-  // );
+  server.patch(
+    "/update",
+    {
+      schema: {
+        body: $ref("updateListTitle"),
+        response: {
+          201: $ref("fullListResponseSchema"),
+        },
+      },
+    },
+    updateListTitleHandler,
+  );
 }

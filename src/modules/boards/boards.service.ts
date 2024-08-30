@@ -3,7 +3,6 @@ import { Knex } from "knex";
 import {
   CreatBoardInput,
   DeleteBoardInput,
-  deleteBoardResponse,
   UpdateBoardTitleInput,
 } from "./boards.schema";
 
@@ -24,9 +23,7 @@ export async function updateBoardTitle(
     .where({ id })
     .update({ title })
     .returning("*");
-
-
-    console.log(updatedBoard)
+    
   return updatedBoard;
 }
 
@@ -61,7 +58,7 @@ export async function deleteBoard(knex: Knex, input: DeleteBoardInput) {
     .where(input)
     .del()
     .returning(["id", "title"]);
-    
+
   return deleted;
 }
 

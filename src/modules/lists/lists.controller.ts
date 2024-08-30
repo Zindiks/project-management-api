@@ -1,6 +1,10 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { createList, getListsByBoardId } from "./lists.service";
-import { CreateListInput } from "./lists.schema";
+import {
+  createList,
+  getListsByBoardId,
+  updateListTitle,
+} from "./lists.service";
+import { CreateListInput, UpdateListTitleInput } from "./lists.schema";
 
 // CREATE BOARD
 export async function createListHandler(
@@ -14,34 +18,35 @@ export async function createListHandler(
   console.log(body);
 
   try {
-    const board = await createList(this.knex, body);
+    const list = await createList(this.knex, body);
 
-
-
-    return reply.status(200).send(board);
+    return reply.status(200).send(list);
   } catch (err) {
     return reply.status(500).send(err);
   }
 }
 
 // // UPDATE BOARD TITLE
-// export async function updateBoardTitleHandler(
-//   request: FastifyRequest<{
-//     Body: UpdateBoardTitleInput;
-//   }>,
-//   reply: FastifyReply,
-// ) {
-//   const body = request.body;
+export async function updateListTitleHandler(
+  this: FastifyInstance,
+  request: FastifyRequest<{
+    Body: UpdateListTitleInput;
+  }>,
+  reply: FastifyReply,
+) {
+  const body = request.body;
 
-//   console.log(body);
 
-//   try {
-//     const board = await updateBoardTitle(body);
-//     return reply.status(201).send(board);
-//   } catch (err) {
-//     return reply.status(500).send(err);
-//   }
-// }
+  try {
+    const list = await updateListTitle(this.knex, body);
+
+ 
+
+    return reply.status(201).send(list);
+  } catch (err) {
+    return reply.status(500).send(err);
+  }
+}
 
 // // DELETE BOARD BY ID
 // export async function deleteBoardHandler(
@@ -76,10 +81,10 @@ export async function getListsByBoardIdHandler(
   const { boardId } = request.params;
 
   try {
-    const board = await getListsByBoardId(this.knex, boardId);
+    const lists = await getListsByBoardId(this.knex, boardId);
 
-    if (board) {
-      return reply.status(200).send(board);
+    if (lists) {
+      return reply.status(200).send(lists);
     } else {
       return reply.status(404).send({ message: "no lists" });
     }
