@@ -21,7 +21,6 @@ export async function createBoardHandler(
   reply: FastifyReply,
 ) {
   const body = request.body;
-  console.log(body);
 
   try {
     const board = await createBoard(this.knex, body);
@@ -84,8 +83,6 @@ export async function getBoardByIdHandler(
   try {
     const board = await getBoardById(this.knex, boardId);
     if (board) {
-      console.log(board);
-
       return reply.status(200).send(board);
     } else {
       return reply.status(404).send({ message: "board not found" });

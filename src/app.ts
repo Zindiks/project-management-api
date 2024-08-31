@@ -13,9 +13,13 @@ import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 
 import { boardSchemas } from "./modules/boards/boards.schema";
 import { listSchemas } from "./modules/lists/lists.schema";
+import { cardSchemas } from "./modules/cards/cards.schema";
+
 import { boardRoutes } from "./modules/boards/boards.route";
-import cors from "@fastify/cors";
 import { listRoutes } from "./modules/lists/lists.route";
+import { cardRoutes } from "./modules/cards/cards.route";
+
+import cors from "@fastify/cors";
 import knexPlugin from "./db/knexPlugin";
 
 export const server = Fastify({
@@ -28,7 +32,7 @@ server.register(import("@fastify/swagger"), {
   swagger: {
     info: {
       title: "API Documentation",
-      description: "API для управления досками и списками",
+      description: "API for managing borders and lists",
       version: "1.0.0",
     },
     host: "localhost:4000",
@@ -50,8 +54,12 @@ server.register(listRoutes, {
   prefix: "api/lists",
 });
 
+server.register(cardRoutes, {
+  prefix: "api/cards",
+});
+
 async function main() {
-  for (const schema of [...boardSchemas, ...listSchemas]) {
+  for (const schema of [...boardSchemas, ...listSchemas, ...cardSchemas]) {
     server.addSchema(schema);
   }
 
