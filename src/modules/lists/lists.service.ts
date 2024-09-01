@@ -46,7 +46,17 @@ export async function getListsByBoardId(knex: Knex, board_id: string) {
   const data = await knex("lists")
     .select(
       "lists.*",
-      knex.raw("json_agg(cards.* ORDER BY cards.order ASC) as cards"),
+      knex.raw(`
+        COALESCE(
+          json_agg(
+            CASE 
+              WHEN cards.id IS NOT NULL THEN cards
+              ELSE NULL
+            END
+            ORDER BY cards.order ASC
+          ) FILTER (WHERE cards.id IS NOT NULL), '[]'
+        ) as cards
+      `),
     )
     .leftJoin("cards", "lists.id", "cards.list_id")
     .where({ "lists.board_id": board_id })
@@ -87,16 +97,9 @@ export async function updateListsOrder(
         });
     });
 
-    // Execute all the queries within the transaction
     await Promise.all(queries);
 
-    // const updatedLists = await trx(table)
-    //   .select("*")
-    //   .where({ board_id })
-    //   .orderBy("order", "asc");
 
-    // // Return the updated lists
-    // return updatedLists;
   });
 }
 

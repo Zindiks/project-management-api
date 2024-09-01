@@ -9,9 +9,8 @@ const boards_service_1 = require("./boards.service");
 // CREATE BOARD
 async function createBoardHandler(request, reply) {
     const body = request.body;
-    console.log(body);
     try {
-        const board = await (0, boards_service_1.createBoard)(body);
+        const board = await (0, boards_service_1.createBoard)(this.knex, body);
         return reply.status(201).send(board);
     }
     catch (err) {
@@ -21,9 +20,8 @@ async function createBoardHandler(request, reply) {
 // UPDATE BOARD TITLE
 async function updateBoardTitleHandler(request, reply) {
     const body = request.body;
-    console.log(body);
     try {
-        const board = await (0, boards_service_1.updateBoardTitle)(body);
+        const board = await (0, boards_service_1.updateBoardTitle)(this.knex, body);
         return reply.status(201).send(board);
     }
     catch (err) {
@@ -32,9 +30,8 @@ async function updateBoardTitleHandler(request, reply) {
 }
 // DELETE BOARD BY ID
 async function deleteBoardHandler(request, reply) {
-    const { id } = request.params;
     try {
-        const deleted = await (0, boards_service_1.deleteBoard)(id);
+        const deleted = await (0, boards_service_1.deleteBoard)(this.knex, request.params);
         if (deleted) {
             return reply.status(200).send(deleted);
         }
@@ -50,7 +47,7 @@ async function deleteBoardHandler(request, reply) {
 async function getBoardByIdHandler(request, reply) {
     const { boardId } = request.params;
     try {
-        const board = await (0, boards_service_1.getBoardById)(boardId);
+        const board = await (0, boards_service_1.getBoardById)(this.knex, boardId);
         if (board) {
             return reply.status(200).send(board);
         }
@@ -66,7 +63,7 @@ async function getBoardByIdHandler(request, reply) {
 async function getAllBoardsHandler(request, reply) {
     const { orgId } = request.params;
     try {
-        const boards = await (0, boards_service_1.getBoardsByOrgId)(orgId);
+        const boards = await (0, boards_service_1.getBoardsByOrgId)(this.knex, orgId);
         if (boards) {
             return reply.status(200).send(boards);
         }

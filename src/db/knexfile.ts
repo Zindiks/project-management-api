@@ -3,11 +3,11 @@ import { Knex } from "knex";
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: "pg",
-    connection: {
-      host: 'localhost',
-      user: 'postgres',
-      password: 'password',
-      database: 'trello-clone-api',
+    connection: process.env.DATABASE_URL || {
+      host: "localhost",
+      user: "postgres",
+      password: "password",
+      database: "trello-clone-api",
     },
     pool: {
       min: 2,
@@ -19,6 +19,4 @@ const config: { [key: string]: Knex.Config } = {
   },
 };
 
-export default config
-
-
+export default config;

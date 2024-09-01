@@ -29,16 +29,19 @@ export const server = Fastify({
 server.register(knexPlugin);
 
 server.register(import("@fastify/swagger"), {
-  swagger: {
+  openapi: {
     info: {
       title: "API Documentation",
       description: "API for managing borders and lists",
       version: "1.0.0",
     },
-    host: "localhost:4000",
-    schemes: ["http"],
-    consumes: ["application/json"],
-    produces: ["application/json"],
+    servers: [
+      {
+        url: "http://localhost:4000",
+      },
+    ],
+    components: {},
+    security: [],
   },
 });
 
@@ -64,7 +67,7 @@ async function main() {
   }
 
   await server.register(cors, {
-    origin: "http://localhost:3000",
+    origin: process.env.BASE_WEB_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   });

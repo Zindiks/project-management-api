@@ -38,21 +38,30 @@ exports.server = void 0;
 const fastify_1 = __importDefault(require("fastify"));
 const boards_schema_1 = require("./modules/boards/boards.schema");
 const lists_schema_1 = require("./modules/lists/lists.schema");
+const cards_schema_1 = require("./modules/cards/cards.schema");
 const boards_route_1 = require("./modules/boards/boards.route");
-const cors_1 = __importDefault(require("@fastify/cors"));
 const lists_route_1 = require("./modules/lists/lists.route");
-exports.server = (0, fastify_1.default)({ logger: true });
+const cards_route_1 = require("./modules/cards/cards.route");
+const cors_1 = __importDefault(require("@fastify/cors"));
+const knexPlugin_1 = __importDefault(require("./db/knexPlugin"));
+exports.server = (0, fastify_1.default)({
+    logger: true,
+}).withTypeProvider();
+exports.server.register(knexPlugin_1.default);
 exports.server.register(Promise.resolve().then(() => __importStar(require("@fastify/swagger"))), {
-    swagger: {
+    openapi: {
         info: {
             title: "API Documentation",
-            description: "API для управления досками и списками",
+            description: "API for managing borders and lists",
             version: "1.0.0",
         },
-        host: "localhost:4000",
-        schemes: ["http"],
-        consumes: ["application/json"],
-        produces: ["application/json"],
+        servers: [
+            {
+                url: "http://localhost:4000",
+            },
+        ],
+        components: {},
+        security: [],
     },
 });
 exports.server.register(Promise.resolve().then(() => __importStar(require("@fastify/swagger-ui"))), {
@@ -64,12 +73,15 @@ exports.server.register(boards_route_1.boardRoutes, {
 exports.server.register(lists_route_1.listRoutes, {
     prefix: "api/lists",
 });
+exports.server.register(cards_route_1.cardRoutes, {
+    prefix: "api/cards",
+});
 async function main() {
-    for (const schema of [...boards_schema_1.boardSchemas, ...lists_schema_1.listSchemas]) {
+    for (const schema of [...boards_schema_1.boardSchemas, ...lists_schema_1.listSchemas, ...cards_schema_1.cardSchemas]) {
         exports.server.addSchema(schema);
     }
     await exports.server.register(cors_1.default, {
-        origin: "http://localhost:3000",
+        origin: process.env.BASE_WEB_URL,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
         credentials: true,
     });

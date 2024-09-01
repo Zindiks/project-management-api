@@ -116,5 +116,5 @@ export const { schemas: listSchemas, $ref } = buildJsonSchemas(
     copyList,
     updateListsOrder,
   },
-  { $id: "List" },
+  { $id: "lists" },
 );
