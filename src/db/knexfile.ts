@@ -3,7 +3,7 @@ import { Knex } from "knex";
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: "pg",
-    connection: process.env.DATABASE_URL || {
+    connection: {
       host: "localhost",
       user: "postgres",
       password: "password",

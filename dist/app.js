@@ -34,7 +34,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.server = void 0;
 const fastify_1 = __importDefault(require("fastify"));
 const boards_schema_1 = require("./modules/boards/boards.schema");
 const lists_schema_1 = require("./modules/lists/lists.schema");
@@ -42,13 +41,16 @@ const cards_schema_1 = require("./modules/cards/cards.schema");
 const boards_route_1 = require("./modules/boards/boards.route");
 const lists_route_1 = require("./modules/lists/lists.route");
 const cards_route_1 = require("./modules/cards/cards.route");
+const fastify_metrics_1 = __importDefault(require("fastify-metrics"));
 const cors_1 = __importDefault(require("@fastify/cors"));
 const knexPlugin_1 = __importDefault(require("./db/knexPlugin"));
-exports.server = (0, fastify_1.default)({
-    logger: true,
+const server = (0, fastify_1.default)({
+    logger: {
+        level: "info",
+    },
 }).withTypeProvider();
-exports.server.register(knexPlugin_1.default);
-exports.server.register(Promise.resolve().then(() => __importStar(require("@fastify/swagger"))), {
+server.register(knexPlugin_1.default);
+server.register(Promise.resolve().then(() => __importStar(require("@fastify/swagger"))), {
     openapi: {
         info: {
             title: "API Documentation",
@@ -64,36 +66,37 @@ exports.server.register(Promise.resolve().then(() => __importStar(require("@fast
         security: [],
     },
 });
-exports.server.register(Promise.resolve().then(() => __importStar(require("@fastify/swagger-ui"))), {
+server.register(Promise.resolve().then(() => __importStar(require("@fastify/swagger-ui"))), {
     routePrefix: "/docs",
 });
-exports.server.register(boards_route_1.boardRoutes, {
+server.register(boards_route_1.boardRoutes, {
     prefix: "api/boards",
 });
-exports.server.register(lists_route_1.listRoutes, {
+server.register(lists_route_1.listRoutes, {
     prefix: "api/lists",
 });
-exports.server.register(cards_route_1.cardRoutes, {
+server.register(cards_route_1.cardRoutes, {
     prefix: "api/cards",
 });
+server.register(fastify_metrics_1.default, { endpoint: "/metrics" });
 async function main() {
     for (const schema of [...boards_schema_1.boardSchemas, ...lists_schema_1.listSchemas, ...cards_schema_1.cardSchemas]) {
-        exports.server.addSchema(schema);
+        server.addSchema(schema);
     }
-    await exports.server.register(cors_1.default, {
-        origin: process.env.BASE_WEB_URL,
+    await server.register(cors_1.default, {
+        origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
         credentials: true,
     });
-    exports.server.listen({
+    server.listen({
         port: 4000,
         host: "0.0.0.0",
     }, (err, address) => {
         if (err) {
-            exports.server.log.error(err);
+            server.log.error(err);
             process.exit(1);
         }
-        exports.server.log.info(`Server listening at ${address}`);
+        server.log.info(`Server listening at ${address}`);
     });
 }
 main();

@@ -17,21 +17,42 @@ services:
       - app-network
     restart: unless-stopped
 
-  app:
-    container_name: trello_clone_api_container
-    build: .
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      BASE_WEB_URL: ${BASE_WEB_URL}
-    ports:
-      - "4000:4000"
-    depends_on:
-      - postgres
-    networks:
-      - app-network
-    volumes:
-      - .:/app
-    command: npm run start:prod
+  # app:
+  #   container_name: trello_clone_api_container
+  #   build: .
+  #   environment:
+  #     DATABASE_URL: ${DATABASE_URL}
+  #     BASE_WEB_URL: ${BASE_WEB_URL}
+  #   ports:
+  #     - "4000:4000"
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - .:/app
+  #   command: npm run start:prod
+
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   command:
+  #     - "--config.file=/etc/prometheus/prometheus.yml"
+  #   ports:
+  #     - "9090:9090"
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./prometheus:/etc/prometheus
+  #     - prom_data:/prom/prometheus
+
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3030:3000"
+  #   volumes:
+  #     - grafana-storage:/var/lib/grafana
 
 networks:
   app-network:
@@ -39,3 +60,5 @@ networks:
 
 volumes:
   postgres:
+  # prom_data:
+  # grafana-storage: {}
