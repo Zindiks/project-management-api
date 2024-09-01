@@ -27,6 +27,7 @@ import knexPlugin from "./db/knexPlugin";
 const server = Fastify({
   logger: {
     level: "info",
+    file: "./logs/app.log",
   },
 }).withTypeProvider<TypeBoxTypeProvider>();
 
@@ -67,12 +68,10 @@ server.register(cardRoutes, {
 
 server.register(metricsPlugin, { endpoint: "/metrics" });
 
-
 async function main() {
   for (const schema of [...boardSchemas, ...listSchemas, ...cardSchemas]) {
     server.addSchema(schema);
   }
-
 
   await server.register(cors, {
     origin: "*",
