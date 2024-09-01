@@ -19,26 +19,34 @@ import { boardRoutes } from "./modules/boards/boards.route";
 import { listRoutes } from "./modules/lists/lists.route";
 import { cardRoutes } from "./modules/cards/cards.route";
 
+import metricsPlugin from "fastify-metrics";
+
 import cors from "@fastify/cors";
 import knexPlugin from "./db/knexPlugin";
 
-export const server = Fastify({
-  logger: true,
+const server = Fastify({
+  logger: {
+    level: "info",
+    file: "./logs/app.log",
+  },
 }).withTypeProvider<TypeBoxTypeProvider>();
 
 server.register(knexPlugin);
 
 server.register(import("@fastify/swagger"), {
-  swagger: {
+  openapi: {
     info: {
       title: "API Documentation",
       description: "API for managing borders and lists",
       version: "1.0.0",
     },
-    host: "localhost:4000",
-    schemes: ["http"],
-    consumes: ["application/json"],
-    produces: ["application/json"],
+    servers: [
+      {
+        url: "http://localhost:4000",
+      },
+    ],
+    components: {},
+    security: [],
   },
 });
 
@@ -58,13 +66,15 @@ server.register(cardRoutes, {
   prefix: "api/cards",
 });
 
+server.register(metricsPlugin, { endpoint: "/metrics" });
+
 async function main() {
   for (const schema of [...boardSchemas, ...listSchemas, ...cardSchemas]) {
     server.addSchema(schema);
   }
 
   await server.register(cors, {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   });

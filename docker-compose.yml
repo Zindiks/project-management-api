@@ -5,10 +5,10 @@ services:
     container_name: postgres_container
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${KNEX_USERNAME}
+      POSTGRES_PASSWORD: ${KNEX_PASSWORD}
       PGDATA: /data/postgres
-      POSTGRES_DB: trello-clone-api
+      POSTGRES_DB: ${KNEX_DATABASE}
     volumes:
       - postgres:/data/postgres
     ports:
@@ -17,26 +17,12 @@ services:
       - app-network
     restart: unless-stopped
 
-  
-  # pgadmin:
-  #   container_name: pgadmin_container
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
-  #     PGADMIN_DEFAULT_PASSWORD: password
-  #   volumes:
-  #     - pgadmin:/root/.pgadmin
-  #   ports:
-  #     - "${PGADMIN_PORT:-5050}:80"
-  #   networks:
-  #     - app-network
-  #   restart: unless-stopped
-
   # app:
   #   container_name: trello_clone_api_container
   #   build: .
   #   environment:
-  #     DATABASE_URL: "postgresql://postgres:password@postgres_container:5432/trello-clone-api?schema=public"
+  #     DATABASE_URL: ${DATABASE_URL}
+  #     BASE_WEB_URL: ${BASE_WEB_URL}
   #   ports:
   #     - "4000:4000"
   #   depends_on:
@@ -47,10 +33,32 @@ services:
   #     - .:/app
   #   command: npm run start:prod
 
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   command:
+  #     - "--config.file=/etc/prometheus/prometheus.yml"
+  #   ports:
+  #     - "9090:9090"
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./prometheus:/etc/prometheus
+  #     - prom_data:/prom/prometheus
+
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3030:3000"
+  #   volumes:
+  #     - grafana-storage:/var/lib/grafana
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   postgres:
-  pgadmin:
+  # prom_data:
+  # grafana-storage: {}

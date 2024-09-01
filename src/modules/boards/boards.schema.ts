@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { buildJsonSchemas } from "fastify-zod";
 
-
 const boardId = {
   id: z.string(),
 };
@@ -60,11 +59,14 @@ const boardsResponseSchema = z.array(fullBoardResponseSchema);
 export type CreatBoardInput = z.infer<typeof createBoard>;
 export type UpdateBoardTitleInput = z.infer<typeof updateBoardTitle>;
 export type DeleteBoardInput = z.infer<typeof deleteBoard>;
-export const { schemas: boardSchemas, $ref } = buildJsonSchemas({
-  createBoard,
-  fullBoardResponseSchema,
-  boardsResponseSchema,
-  deleteBoard,
-  deleteBoardResponse,
-  updateBoardTitle,
-});
+export const { schemas: boardSchemas, $ref } = buildJsonSchemas(
+  {
+    createBoard,
+    fullBoardResponseSchema,
+    boardsResponseSchema,
+    deleteBoard,
+    deleteBoardResponse,
+    updateBoardTitle,
+  },
+  { $id: "boards" },
+);

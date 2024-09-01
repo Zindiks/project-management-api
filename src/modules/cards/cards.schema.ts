@@ -67,5 +67,5 @@ export const { schemas: cardSchemas, $ref } = buildJsonSchemas(
     updateCardOrder,
     updateCardsOrder,
   },
-  { $id: "Card" },
+  { $id: "cards" },
 );
