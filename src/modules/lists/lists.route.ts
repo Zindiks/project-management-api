@@ -4,6 +4,7 @@ import {
   createListHandler,
   deleteListHandler,
   getListsByBoardIdHandler,
+  updateListsOrderHandler,
   updateListTitleHandler,
 } from "./lists.controller";
 import { $ref } from "./lists.schema";
@@ -24,6 +25,26 @@ export async function listRoutes(server: FastifyInstance) {
     createListHandler,
   );
 
+  // UPDATE ORDER
+
+  //TODO: DO I REALLY HAVE TO RETURN FULL LISTS RESPONSE SCHEMA? MAYBE STATUS IS ENOUGH?
+  server.put(
+    "/order/:boardId",
+    {
+      schema: {
+        body: $ref("updateListsOrder"),
+        response: {
+          200: $ref("fullListsResponseSchema"),
+        },
+        tags: ["Lists"],
+        params: {
+          boardId: { type: "string" },
+        },
+      },
+    },
+    updateListsOrderHandler,
+  );
+
   // plural
   server.get(
     "/:boardId",
@@ -37,7 +58,6 @@ export async function listRoutes(server: FastifyInstance) {
     },
     getListsByBoardIdHandler,
   );
-
 
   //FIX: IM CONFUSED! Is it good practise to include body to DELETE METHOD
 
@@ -56,6 +76,7 @@ export async function listRoutes(server: FastifyInstance) {
         response: {
           200: $ref("deleteListResponse"),
         },
+        tags: ["Lists"],
       },
     },
     deleteListHandler,
@@ -91,26 +112,17 @@ export async function listRoutes(server: FastifyInstance) {
     updateListTitleHandler,
   );
 
-
-    server.post(
-      "/copy",
-      {
-        schema: {
-          body: $ref("copyList"),
-          response: {
-            201: $ref("fullListResponseSchema"),
-          },
-          tags: ["Lists"],
+  server.post(
+    "/copy",
+    {
+      schema: {
+        body: $ref("copyList"),
+        response: {
+          201: $ref("fullListResponseSchema"),
         },
+        tags: ["Lists"],
       },
-      copyListHandler,
-    );
-
-
-
-
-
+    },
+    copyListHandler,
+  );
 }
-
-
-

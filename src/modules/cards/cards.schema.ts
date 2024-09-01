@@ -38,12 +38,6 @@ const createCard = z.object({
   ...cardTitle,
 });
 
-// const updateListTitle = z.object({
-//   ...listId,
-//   ...boardId,
-//   ...listTitle,
-// });
-
 const fullCardResponseSchema = z.object({
   ...cardId,
   ...listId,
@@ -52,35 +46,26 @@ const fullCardResponseSchema = z.object({
   ...listTimestamp,
 });
 
-// const deleteList = z.object({
-//   ...listId,
-//   ...boardId,
-// });
+const updateCardOrder = z.object({
+  ...listId,
+  ...cardId,
+  ...cardOrder,
+});
 
-// const deleteListResponse = z.object({
-//   ...listId,
-// });
-
-// const copyList = z.object({
-//   ...listId,
-//   ...boardId,
-// });
-
-// const deleteBoardResponse = z.object({
-//   ...boardId,
-//   title: z.string(),
-// });
+const updateCardsOrder = z.array(updateCardOrder);
 
 export const fullCardsResponseSchema = z.array(fullCardResponseSchema);
 
 export type CreateCardInput = z.infer<typeof createCard>;
-// export type CopyListInput = z.infer<typeof copyList>;
-// export type UpdateListTitleInput = z.infer<typeof updateListTitle>;
-// export type DeleteListInput = z.infer<typeof deleteList>;
+export type UpdatedCardOrderInput = z.infer<typeof updateCardOrder>;
+export type UpdatedCardsOrderInput = z.infer<typeof updateCardsOrder>;
+
 export const { schemas: cardSchemas, $ref } = buildJsonSchemas(
   {
     createCard,
     fullCardResponseSchema,
+    updateCardOrder,
+    updateCardsOrder,
   },
   { $id: "Card" },
 );

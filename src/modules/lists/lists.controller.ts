@@ -4,12 +4,14 @@ import {
   createList,
   deleteList,
   getListsByBoardId,
+  updateListsOrder,
   updateListTitle,
 } from "./lists.service";
 import {
   CopyListInput,
   CreateListInput,
   DeleteListInput,
+  UpdateListsOrderInput,
   UpdateListTitleInput,
 } from "./lists.schema";
 
@@ -31,19 +33,29 @@ export async function createListHandler(
   }
 }
 
-export async function updateListTitleHandler(
+export async function updateListsOrderHandler(
   this: FastifyInstance,
   request: FastifyRequest<{
-    Body: UpdateListTitleInput;
+    Body: UpdateListsOrderInput;
+    Params: { boardId: string };
   }>,
   reply: FastifyReply,
 ) {
   const body = request.body;
+  const { boardId } = request.params;
+
+  // console.log("Request Body: ", body); // Log the body for debugging
+  // console.log("Board ID: ", boardId); // Log the board ID for debugging
+
   try {
-    const list = await updateListTitle(this.knex, body);
-    return reply.status(201).send(list);
+    // Call the service function that updates the lists order
+    const lists = await updateListsOrder(this.knex, body, boardId);
+
+    // Send the updated lists in the response
+    return reply.status(200).send(lists);
   } catch (err) {
-    return reply.status(500).send(err);
+    console.error("Error updating lists order: ", err); // Log the error
+    return reply.status(500).send({ error: "Internal Server Error" });
   }
 }
 
@@ -98,6 +110,22 @@ export async function getListsByBoardIdHandler(
     } else {
       return reply.status(404).send({ message: "no lists" });
     }
+  } catch (err) {
+    return reply.status(500).send(err);
+  }
+}
+
+export async function updateListTitleHandler(
+  this: FastifyInstance,
+  request: FastifyRequest<{
+    Body: UpdateListTitleInput;
+  }>,
+  reply: FastifyReply,
+) {
+  const body = request.body;
+  try {
+    const list = await updateListTitle(this.knex, body);
+    return reply.status(201).send(list);
   } catch (err) {
     return reply.status(500).send(err);
   }

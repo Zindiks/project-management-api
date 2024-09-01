@@ -4,6 +4,8 @@ import {
   CopyListInput,
   CreateListInput,
   DeleteListInput,
+  FullListsInput,
+  UpdateListsOrderInput,
   UpdateListTitleInput,
 } from "./lists.schema";
 
@@ -64,6 +66,38 @@ export async function updateListTitle(knex: Knex, input: UpdateListTitleInput) {
     .returning("*");
 
   return updatedBoard;
+}
+
+// UPDATE LIST ORDER
+
+export async function updateListsOrder(
+  knex: Knex,
+  input: UpdateListsOrderInput,
+  board_id: string,
+) {
+  return knex.transaction(async (trx) => {
+    const queries = input.map((list) => {
+      return trx(table)
+        .where({
+          id: list.id,
+          board_id,
+        })
+        .update({
+          order: list.order,
+        });
+    });
+
+    // Execute all the queries within the transaction
+    await Promise.all(queries);
+
+    // const updatedLists = await trx(table)
+    //   .select("*")
+    //   .where({ board_id })
+    //   .orderBy("order", "asc");
+
+    // // Return the updated lists
+    // return updatedLists;
+  });
 }
 
 // DELETE LIST
@@ -134,7 +168,6 @@ export async function copyList(knex: Knex, input: CopyListInput) {
 
     return newList;
   });
-
 
   return list;
 }

@@ -1,7 +1,5 @@
 import { FastifyInstance } from "fastify";
-import {
-  createCardHandler
-} from "./cards.controller";
+import { createCardHandler, updateCardsOrderHandler } from "./cards.controller";
 import { $ref } from "./cards.schema";
 
 export async function cardRoutes(server: FastifyInstance) {
@@ -18,6 +16,23 @@ export async function cardRoutes(server: FastifyInstance) {
       },
     },
     createCardHandler,
+  );
+
+  server.put(
+    "/order/:listId",
+    {
+      schema: {
+        body: $ref("updateCardsOrder"),
+        response: {
+          200: $ref("fullCardResponseSchema"),
+        },
+        tags: ["Lists"],
+        params: {
+          boardId: { type: "string" },
+        },
+      },
+    },
+    updateCardsOrderHandler,
   );
 
   // plural
@@ -72,31 +87,31 @@ export async function cardRoutes(server: FastifyInstance) {
 
   // //UPDATE:
 
-//   server.patch(
-//     "/update",
-//     {
-//       schema: {
-//         body: $ref("updateListTitle"),
-//         response: {
-//           201: $ref("fullListResponseSchema"),
-//         },
-//         tags: ["Lists"],
-//       },
-//     },
-//     updateListTitleHandler,
-//   );
+  //   server.patch(
+  //     "/update",
+  //     {
+  //       schema: {
+  //         body: $ref("updateListTitle"),
+  //         response: {
+  //           201: $ref("fullListResponseSchema"),
+  //         },
+  //         tags: ["Lists"],
+  //       },
+  //     },
+  //     updateListTitleHandler,
+  //   );
 
-//   server.post(
-//     "/copy",
-//     {
-//       schema: {
-//         body: $ref("copyList"),
-//         response: {
-//           201: $ref("fullListResponseSchema"),
-//         },
-//         tags: ["Lists"],
-//       },
-//     },
-//     copyListHandler,
-//   );
+  //   server.post(
+  //     "/copy",
+  //     {
+  //       schema: {
+  //         body: $ref("copyList"),
+  //         response: {
+  //           201: $ref("fullListResponseSchema"),
+  //         },
+  //         tags: ["Lists"],
+  //       },
+  //     },
+  //     copyListHandler,
+  //   );
 }
