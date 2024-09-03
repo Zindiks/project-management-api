@@ -4,7 +4,7 @@ const config = {
     development: {
         client: "pg",
         connection: {
-            host: "localhost",
+            host: "postgres_container",
             user: "postgres",
             password: "password",
             database: "trello-clone-api",

@@ -47,6 +47,7 @@ const knexPlugin_1 = __importDefault(require("./db/knexPlugin"));
 const server = (0, fastify_1.default)({
     logger: {
         level: "info",
+        file: "./logs/app.log",
     },
 }).withTypeProvider();
 server.register(knexPlugin_1.default);
@@ -78,13 +79,15 @@ server.register(lists_route_1.listRoutes, {
 server.register(cards_route_1.cardRoutes, {
     prefix: "api/cards",
 });
-server.register(fastify_metrics_1.default, { endpoint: "/metrics" });
+server.register(fastify_metrics_1.default, {
+    endpoint: "/metrics",
+});
 async function main() {
     for (const schema of [...boards_schema_1.boardSchemas, ...lists_schema_1.listSchemas, ...cards_schema_1.cardSchemas]) {
         server.addSchema(schema);
     }
     await server.register(cors_1.default, {
-        origin: "*",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
         credentials: true,
     });

@@ -40,7 +40,6 @@ export async function updateBoardTitleHandler(
 ) {
   const body = request.body;
 
-
   try {
     const board = await updateBoardTitle(this.knex, body);
     return reply.status(201).send(board);
@@ -78,6 +77,7 @@ export async function getBoardByIdHandler(
   }>,
   reply: FastifyReply,
 ) {
+
   const { boardId } = request.params;
 
   try {

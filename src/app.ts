@@ -19,7 +19,7 @@ import { boardRoutes } from "./modules/boards/boards.route";
 import { listRoutes } from "./modules/lists/lists.route";
 import { cardRoutes } from "./modules/cards/cards.route";
 
-import metricsPlugin from "fastify-metrics";
+import fastifyMetrics, { IMetricsPluginOptions } from "fastify-metrics"
 
 import cors from "@fastify/cors";
 import knexPlugin from "./db/knexPlugin";
@@ -54,6 +54,7 @@ server.register(import("@fastify/swagger-ui"), {
   routePrefix: "/docs",
 });
 
+
 server.register(boardRoutes, {
   prefix: "api/boards",
 });
@@ -66,7 +67,9 @@ server.register(cardRoutes, {
   prefix: "api/cards",
 });
 
-server.register(metricsPlugin, { endpoint: "/metrics" });
+server.register(fastifyMetrics, {
+  endpoint: "/metrics", 
+});
 
 async function main() {
   for (const schema of [...boardSchemas, ...listSchemas, ...cardSchemas]) {
@@ -74,7 +77,7 @@ async function main() {
   }
 
   await server.register(cors, {
-    origin: "*",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   });
