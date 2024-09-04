@@ -27,7 +27,7 @@ import knexPlugin from "./db/knexPlugin";
 const server = Fastify({
   logger: {
     level: "info",
-    file: "./logs/app.log",
+    // file: "./logs/app.log",
   },
 }).withTypeProvider<TypeBoxTypeProvider>();
 

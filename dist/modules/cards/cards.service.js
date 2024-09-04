@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCard = createCard;
 exports.updateCardsOrder = updateCardsOrder;
+exports.getCardById = getCardById;
 const table = "cards";
 // CREATE LIST
 async function createCard(knex, input) {
@@ -35,9 +36,9 @@ async function updateCardsOrder(knex, input, list_id) {
     });
 }
 // // GET LISTS BY ID
-// export async function getListsByBoardId(knex: Knex, board_id: string) {
-//   return knex(table).where({ board_id }).orderBy("order", "asc").returning("*");
-// }
+async function getCardById(knex, card_id) {
+    return knex(table).where({ id: card_id }).returning("*");
+}
 // // UPDATE LIST TITLE
 // export async function updateListTitle(knex: Knex, input: UpdateListTitleInput) {
 //   const { id, board_id, title } = input;

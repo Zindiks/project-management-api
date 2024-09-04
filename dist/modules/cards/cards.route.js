@@ -26,19 +26,14 @@ async function cardRoutes(server) {
             },
         },
     }, cards_controller_1.updateCardsOrderHandler);
-    // plural
-    // server.get(
-    //   "/:boardId",
-    //   {
-    //     schema: {
-    //       response: {
-    //         200: $ref("fullListsResponseSchema"),
-    //       },
-    //       tags: ["Lists"],
-    //     },
-    //   },
-    //   getListsByBoardIdHandler,
-    // );
+    server.get("/:cardId", {
+        schema: {
+            response: {
+                200: (0, cards_schema_1.$ref)("fullCardResponseSchema"),
+            },
+            tags: ["Lists"],
+        },
+    }, cards_controller_1.getCardByIdHandler);
     //FIX: IM CONFUSED! Is it good practise to include body to DELETE METHOD
     // server.delete(
     //   "/:id/board/:board_id",

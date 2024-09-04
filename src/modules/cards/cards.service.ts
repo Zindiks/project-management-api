@@ -32,9 +32,8 @@ export async function updateCardsOrder(
   list_id: string,
 ) {
   await knex.transaction(async (trx) => {
-
     for (const card of input) {
-      console.log(card.order)
+      console.log(card.order);
       await trx(table)
         .where({
           id: card.id,
@@ -48,9 +47,14 @@ export async function updateCardsOrder(
 }
 
 // // GET LISTS BY ID
-// export async function getListsByBoardId(knex: Knex, board_id: string) {
-//   return knex(table).where({ board_id }).orderBy("order", "asc").returning("*");
-// }
+export async function getCardById(knex: Knex, card_id: string) {
+  console.log("Hello");
+  console.log(card_id);
+
+  const [data] = await knex(table).where({ id: card_id }).returning("*");
+
+  return data;
+}
 
 // // UPDATE LIST TITLE
 // export async function updateListTitle(knex: Knex, input: UpdateListTitleInput) {

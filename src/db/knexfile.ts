@@ -1,10 +1,14 @@
 import { Knex } from "knex";
 
+
+//postgres_container
+
+
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: "pg",
     connection: {
-      host: "postgres_container",
+      host: "localhost",
       user: "postgres",
       password: "password",
       database: "trello-clone-api",

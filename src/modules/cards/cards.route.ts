@@ -1,5 +1,9 @@
 import { FastifyInstance } from "fastify";
-import { createCardHandler, updateCardsOrderHandler } from "./cards.controller";
+import {
+  createCardHandler,
+  getCardByIdHandler,
+  updateCardsOrderHandler,
+} from "./cards.controller";
 import { $ref } from "./cards.schema";
 
 export async function cardRoutes(server: FastifyInstance) {
@@ -35,19 +39,18 @@ export async function cardRoutes(server: FastifyInstance) {
     updateCardsOrderHandler,
   );
 
-  // plural
-  // server.get(
-  //   "/:boardId",
-  //   {
-  //     schema: {
-  //       response: {
-  //         200: $ref("fullListsResponseSchema"),
-  //       },
-  //       tags: ["Lists"],
-  //     },
-  //   },
-  //   getListsByBoardIdHandler,
-  // );
+  server.get(
+    "/:cardId",
+    {
+      schema: {
+        response: {
+          200: $ref("fullCardResponseSchema"),
+        },
+        tags: ["Cards"],
+      },
+    },
+    getCardByIdHandler,
+  );
 
   //FIX: IM CONFUSED! Is it good practise to include body to DELETE METHOD
 

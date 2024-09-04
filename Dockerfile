@@ -12,9 +12,6 @@ COPY . .
 
 RUN npm run build
 
-# Установка переменных окружения
-ENV KNEX_PASSWORD=
-
 EXPOSE 4000
 
 CMD ["pm2-runtime", "dist/app.js"]
