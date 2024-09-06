@@ -1,12 +1,3 @@
-// import fastifyJwt from "fastify-jwt";
-// import {userRoutes} from "./modules/user/user.route";
-// import {userSchemas} from "./modules/user/user.schema";
-// import {productSchemas} from "./modules/product/product.schema";
-// import {productRoutes} from "./modules/product/product.route";
-// import { version } from "../package.json"
-// import swagger from "@fastify/swagger-ui"
-// import {withRefResolver} from "fastify-zod";
-
 import Fastify from "fastify";
 import os from "os";
 
