@@ -8,6 +8,7 @@
 // import {withRefResolver} from "fastify-zod";
 
 import Fastify from "fastify";
+import os from "os";
 
 import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 
@@ -19,7 +20,7 @@ import { boardRoutes } from "./modules/boards/boards.route";
 import { listRoutes } from "./modules/lists/lists.route";
 import { cardRoutes } from "./modules/cards/cards.route";
 
-import fastifyMetrics, { IMetricsPluginOptions } from "fastify-metrics"
+import fastifyMetrics, { IMetricsPluginOptions } from "fastify-metrics";
 
 import cors from "@fastify/cors";
 import knexPlugin from "./db/knexPlugin";
@@ -54,7 +55,6 @@ server.register(import("@fastify/swagger-ui"), {
   routePrefix: "/docs",
 });
 
-
 server.register(boardRoutes, {
   prefix: "api/boards",
 });
@@ -68,7 +68,7 @@ server.register(cardRoutes, {
 });
 
 server.register(fastifyMetrics, {
-  endpoint: "/metrics", 
+  endpoint: "/metrics",
 });
 
 async function main() {
@@ -81,6 +81,15 @@ async function main() {
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   });
+
+server.get("/check", (req, reply) => {
+  const hostname = os.hostname(); 
+  const htmlResponse = `<html><body><h1>Server Hostname: ${hostname}</h1></body></html>`;
+
+  reply
+    .type("text/html")
+    .send(htmlResponse); 
+});
 
   server.listen(
     {

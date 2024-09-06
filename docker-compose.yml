@@ -5,28 +5,30 @@ services:
     container_name: postgres_container
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${KNEX_USERNAME}
+      POSTGRES_PASSWORD: ${KNEX_PASSWORD}
       PGDATA: /data/postgres
-      POSTGRES_DB: fastify-prisma
+      POSTGRES_DB: ${KNEX_DATABASE}
     volumes:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
     restart: unless-stopped
 
-  # app:
-  #   container_name: trello_clone_api_container
-  #   build: .
-  #   environment:
-  #     DATABASE_URL: postgresql://postgres:password@postgres_container:5432/trello-clone-api?schema=public
-  #   ports:
-  #     - "4000:4000"
-  #   depends_on:
-  #     - postgres
-  #   volumes:
-  #     - .:/app
-  #   command: npm run start:prod
+  app:
+    container_name: trello_clone_api_container
+    build: .
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      KNEX_DATABASE: ${KNEX_DATABASE}
+      KNEX_PASSWORD: ${KNEX_PASSWORD}
+      KNEX_USERNAME: ${KNEX_USERNAME}
+      KNEX_HOST: ${KNEX_HOST}
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    command: pm2-runtime dist/app.js
 
   prometheus:
     image: prom/prometheus

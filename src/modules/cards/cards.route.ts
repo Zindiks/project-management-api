@@ -30,7 +30,7 @@ export async function cardRoutes(server: FastifyInstance) {
         response: {
           200: $ref("fullCardResponseSchema"),
         },
-        tags: ["Lists"],
+        tags: ["Cards"],
         params: {
           boardId: { type: "string" },
         },
