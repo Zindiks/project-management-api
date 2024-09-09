@@ -75,7 +75,7 @@ async function main() {
 
 server.get("/check", (req, reply) => {
   const hostname = os.hostname(); 
-  const htmlResponse = `<html><body><h1>Server Hostname: ${hostname}</h1></body></html>`;
+  const htmlResponse = `<html><body><h1>Server Hostname v2: ${hostname}</h1></body></html>`;
 
   reply
     .type("text/html")
