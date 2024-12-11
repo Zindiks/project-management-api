@@ -29,7 +29,6 @@ const boardTimestamp = {
   updated_at: z.date(),
 };
 
-//
 const createBoard = z.object({
   ...boardRest,
 });
@@ -59,6 +58,7 @@ const boardsResponseSchema = z.array(fullBoardResponseSchema);
 export type CreatBoardInput = z.infer<typeof createBoard>;
 export type UpdateBoardTitleInput = z.infer<typeof updateBoardTitle>;
 export type DeleteBoardInput = z.infer<typeof deleteBoard>;
+
 export const { schemas: boardSchemas, $ref } = buildJsonSchemas(
   {
     createBoard,

@@ -21,18 +21,11 @@ const cardTitle = {
     .min(3, "Title must be at least 3 characters"),
 };
 
-// const listRest = {
-//   ...listTitle,
-//   order: z.number()
-
-// };
-
 const listTimestamp = {
   created_at: z.date(),
   updated_at: z.date(),
 };
 
-//
 const createCard = z.object({
   ...listId,
   ...cardTitle,

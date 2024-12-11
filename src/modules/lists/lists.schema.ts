@@ -65,11 +65,8 @@ const fullListResponseSchema = z.object({
   ...listOrder,
   ...listId,
   ...listTimestamp,
-  cards: z.array(cardSchema).optional().default([]), //Optional
+  cards: z.array(cardSchema).optional().default([]), // Optional
 });
-
-
-
 
 // Schema for deleting a list
 const deleteList = z.object({
@@ -91,7 +88,6 @@ const copyList = z.object({
 // Response schema for multiple lists
 const fullListsResponseSchema = z.array(fullListResponseSchema);
 
-
 const updateListsOrder = z.array(updateListOrder);
 
 // Type Definitions
@@ -101,8 +97,6 @@ export type UpdateListTitleInput = z.infer<typeof updateListTitle>;
 export type UpdateListsOrderInput = z.infer<typeof updateListsOrder>;
 export type DeleteListInput = z.infer<typeof deleteList>;
 export type FullListsInput = z.infer<typeof fullListsResponseSchema>;
-
-
 
 // Build JSON Schemas with Fastify-Zod
 export const { schemas: listSchemas, $ref } = buildJsonSchemas(
