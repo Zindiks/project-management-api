@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { createServer } from "../../bootstrap"; // Adjust the import based on your app structure
-import { config } from "../../configs/config"; // Adjust the import based on your config structure
+import { createServer } from "../../bootstrap"; 
+import { config } from "../../configs/config";
 import {
   CreateBoardInput,
   DeleteBoardInput,
