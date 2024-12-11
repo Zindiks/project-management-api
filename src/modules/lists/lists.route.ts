@@ -27,7 +27,6 @@ export async function listRoutes(server: FastifyInstance) {
 
   // UPDATE ORDER
 
-  //TODO: DO I REALLY HAVE TO RETURN FULL LISTS RESPONSE SCHEMA? MAYBE STATUS IS ENOUGH?
   server.put(
     "/order/:boardId",
     {
@@ -81,22 +80,6 @@ export async function listRoutes(server: FastifyInstance) {
     },
     deleteListHandler,
   );
-
-  // //GET:
-
-  // server.get(
-  //   "/all/:orgId",
-  //   {
-  //     schema: {
-  //       response: {
-  //         200: $ref("boardsResponseSchema"),
-  //       },
-  //     },
-  //   },
-  //   getAllBoardsHandler,
-  // );
-
-  // //UPDATE:
 
   server.patch(
     "/update",

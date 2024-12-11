@@ -55,7 +55,7 @@ export const deleteBoardResponse = z.object({
 
 const boardsResponseSchema = z.array(fullBoardResponseSchema);
 
-export type CreatBoardInput = z.infer<typeof createBoard>;
+export type CreateBoardInput = z.infer<typeof createBoard>;
 export type UpdateBoardTitleInput = z.infer<typeof updateBoardTitle>;
 export type DeleteBoardInput = z.infer<typeof deleteBoard>;
 

@@ -4,9 +4,6 @@ import { config } from "./configs/config";
 async function main() {
   const server = await createServer();
 
-
-  
-
   server.listen(
     {
       port: config.api.port,

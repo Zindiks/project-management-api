@@ -7,7 +7,7 @@ import {
   updateBoardTitle,
 } from "./boards.service";
 import {
-  CreatBoardInput,
+  CreateBoardInput,
   DeleteBoardInput,
   UpdateBoardTitleInput,
 } from "./boards.schema";
@@ -16,7 +16,7 @@ import {
 export async function createBoardHandler(
   this: FastifyInstance,
   request: FastifyRequest<{
-    Body: CreatBoardInput;
+    Body: CreateBoardInput;
   }>,
   reply: FastifyReply,
 ) {

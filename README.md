@@ -16,11 +16,15 @@ docker
 
 
 ## TODO
-* Build Auth service
+* Build Auth service OAuth
+    * Implement OAuth 2.0 for secure authentication
+    * Integrate with popular OAuth providers (e.g., Google, Facebook)
+    * Ensure token validation and refresh mechanisms
 * Splitting the monolithic Fastify API into API Gateway and separate microservices
-
-
-
+    * Identify core services to be extracted
+    * Design and implement API Gateway for routing and aggregation
+    * Develop and deploy individual microservices
+    * Ensure inter-service communication and data consistency
 
 
 

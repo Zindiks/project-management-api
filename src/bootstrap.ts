@@ -10,12 +10,13 @@ import { cardRoutes } from "./modules/cards/cards.route";
 import fastifyMetrics from "fastify-metrics";
 import cors from "@fastify/cors";
 import knexPlugin from "./db/knexPlugin";
+import { config } from "./configs/config";
 
 export async function createServer() {
   const server = Fastify({
     logger: {
       level: "info",
-      // file: "./logs/app.log",
+      // file: "./logs/app.log", // to store logs in a file
     },
   }).withTypeProvider<TypeBoxTypeProvider>();
 
@@ -25,12 +26,12 @@ export async function createServer() {
     openapi: {
       info: {
         title: "API Documentation",
-        description: "API for managing borders and lists",
+        description: "API for managing borders, lists and cards",
         version: "1.0.0",
       },
       servers: [
         {
-          url: "http://localhost:4000",
+          url: "http://" + config.api.host + ":" + config.api.port,
         },
       ],
       components: {},
@@ -63,16 +64,16 @@ export async function createServer() {
   }
 
   await server.register(cors, {
-    origin: "http://localhost:3000",
+    origin: "http://" + config.client.host + ":" + config.client.port,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   });
 
-  server.get("/check", (req, reply) => {
+  server.get("/health", (req, reply) => {
     const hostname = os.hostname();
     const htmlResponse = `<html><body><h1>Server Hostname v2: ${hostname}</h1></body></html>`;
 
-    reply.type("text/html").send(htmlResponse);
+    reply.type("text/html").status(200).send(htmlResponse);
   });
 
   return server;
