@@ -1,3 +1,6 @@
+
+[![CI](https://github.com/Zindiks/project-management-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Zindiks/project-management-api/actions/workflows/ci.yml)
+
 # Project
 
 
