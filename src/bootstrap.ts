@@ -11,6 +11,7 @@ import fastifyMetrics from "fastify-metrics";
 import cors from "@fastify/cors";
 import knexPlugin from "./db/knexPlugin";
 import { config } from "./configs/config";
+import fastifyRateLimit from "@fastify/rate-limit";
 
 export async function createServer() {
   const server = Fastify({
@@ -39,10 +40,12 @@ export async function createServer() {
     },
   });
 
+  // Swagger UI
   server.register(import("@fastify/swagger-ui"), {
     routePrefix: "/docs",
   });
 
+  // Modules
   server.register(boardRoutes, {
     prefix: "api/boards",
   });
@@ -59,16 +62,26 @@ export async function createServer() {
     endpoint: "/metrics",
   });
 
+
+  // // Rate limit
+  // server.register(fastifyRateLimit, {
+  //   max: 100,
+  //   timeWindow: '1 minute'
+  // });
+
+  // Register all schemas
   for (const schema of [...boardSchemas, ...listSchemas, ...cardSchemas]) {
     server.addSchema(schema);
   }
 
+  // Register CORS
   await server.register(cors, {
     origin: "http://" + config.client.host + ":" + config.client.port,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   });
 
+  // Health check + hostname
   server.get("/health", (req, reply) => {
     const hostname = os.hostname();
     const htmlResponse = `<html><body><h1>Server Hostname v2: ${hostname}</h1></body></html>`;

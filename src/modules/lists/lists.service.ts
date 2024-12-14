@@ -30,26 +30,28 @@ export async function createList(knex: Knex, input: CreateListInput) {
   return data;
 }
 
+
 export async function getListsByBoardId(knex: Knex, board_id: string) {
-  return knex("lists")
-    .leftJoin("cards", "lists.id", "cards.list_id")
+  const data = await knex("lists")
     .select(
       "lists.*",
-      knex.raw(
-        `json_group_array(
-          json_object(
-            'id', cards.id,
-            'title', cards.title,
-            'description', cards.description,
-            'order', cards.order,
-            'list_id', cards.list_id
-          )
-        ) as cards`
-      )
+      knex.raw(`
+        COALESCE(
+          json_agg(
+            CASE 
+              WHEN cards.id IS NOT NULL THEN cards
+              ELSE NULL
+            END
+            ORDER BY cards.order ASC
+          ) FILTER (WHERE cards.id IS NOT NULL), '[]'
+        ) as cards
+      `),
     )
-    .where("lists.board_id", board_id)
+    .leftJoin("cards", "lists.id", "cards.list_id")
+    .where({ "lists.board_id": board_id })
     .groupBy("lists.id")
     .orderBy("lists.order", "asc");
+  return data;
 }
 
 // UPDATE LIST TITLE
@@ -99,43 +101,49 @@ export async function deleteList(knex: Knex, input: DeleteListInput) {
 
 export async function copyList(knex: Knex, input: CopyListInput) {
   const { id, board_id } = input;
-  const list = await knex("lists")
+  // Fetch the list to copy, including its associated cards
+  const origin = await knex("lists")
+    .select("lists.*", knex.raw("json_agg(cards.*) as cards"))
     .leftJoin("cards", "lists.id", "cards.list_id")
-    .select(
-      "lists.*",
-      knex.raw(
-        `json_group_array(
-          json_object(
-            'id', cards.id,
-            'title', cards.title,
-            'description', cards.description,
-            'order', cards.order,
-            'list_id', cards.list_id
-          )
-        ) as cards`
-      )
-    )
-    .where("lists.id", id)
-    .andWhere("lists.board_id", board_id)
+    .where({ "lists.id": id, "lists.board_id": board_id })
     .groupBy("lists.id")
     .first();
-
-  const newList = {
-    ...list,
-    id: undefined,
-    title: `${list.title} copy`,
-  };
-
-  const [createdList] = await knex("lists").insert(newList).returning("*");
-
-  const cards = JSON.parse(list.cards);
-  for (const card of cards) {
-    await knex("cards").insert({
-      ...card,
-      id: undefined,
-      list_id: createdList.id,
-    });
+  if (!origin) {
+    throw new Error("List not found"); // Handle case where the list does not exist
   }
-
-  return createdList;
+  const lastList = await knex("lists")
+    .where({ board_id })
+    .orderBy("order", "desc")
+    .select("order")
+    .first();
+  // Calculate the new list's order
+  const newOrder = lastList ? lastList.order + 1 : 1;
+  const { title, cards } = origin;
+  // Start a transaction for creating the list and copying its cards
+  const list = await knex.transaction(async (trx) => {
+    // Insert the new list
+    const [newList] = await trx("lists")
+      .insert({
+        title: `${title} copy`,
+        order: newOrder,
+        board_id,
+      })
+      .returning("*");
+    // Insert the associated cards, if any
+    if (
+      cards &&
+      Array.isArray(cards) &&
+      cards.length > 0 &&
+      cards[0] !== null
+    ) {
+      const cardsData = cards.map((card) => ({
+        title: card.title,
+        description: card.description,
+        order: card.order,
+        list_id: newList.id, // Associate the new cards with the new list
+      }));
+      await trx("cards").insert(cardsData);
+    }
+    return newList;
+  });
 }

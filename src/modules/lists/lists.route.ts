@@ -58,8 +58,6 @@ export async function listRoutes(server: FastifyInstance) {
     getListsByBoardIdHandler,
   );
 
-  //FIX: IM CONFUSED! Is it good practise to include body to DELETE METHOD
-
   server.delete(
     "/:id/board/:board_id",
     {
